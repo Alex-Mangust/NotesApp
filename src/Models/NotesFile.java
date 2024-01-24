@@ -8,13 +8,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotesFile {
+import Controllers.Interfaces.iNotes;
+
+public class NotesFile implements iNotes {
     String pathFile;
 
     public NotesFile(String pathFile) {
         this.pathFile = pathFile;
     }
 
+    @Override
     public void addNote(Note note) {
         try (FileWriter fw = new FileWriter(pathFile, true)) {
             fw.write(note.getTitle() + ";" + note.getDescription() + ";" + note.getDateOfEditing());
@@ -25,43 +28,50 @@ public class NotesFile {
         }
     }
 
-    public void findNote(String findText, int criteriaFind) {
+    @Override
+    public List<Note> findNote(String findText, int criteriaFind) {
         List<Note> notes = readNotes();
+        List<Note> findNotes = new ArrayList<>();
         if (criteriaFind == 0) {
             for (Note note : notes) {
-                if (dateFormat(findText).equals(dateFormat(note.getDateOfEditing()))) {
-                    System.out.println(note);
-                } else {
-                    String[] dateNote = note.getDateOfEditing().split("-");
-                    if (dateFormat(findText).equals(dateFormat(dateNote[0]))) {
-                        System.out.println(note);
-                    } else if (dateFormat(findText).equals(dateFormat(dateNote[1]))) {
-                        System.out.println(note);
-                    }
+                if (note.getTitle().equals(findText)) {
+                    findNotes.add(note);
                 }
             }
-        } else if (criteriaFind == 1) {
+        } else if (criteriaFind == 1){
             for (Note note : notes) {
-                if (note.getTitle().equals(findText)) {
-                    System.out.println(note);
+                if (note.getDescription().equals(findText)) {
+                    findNotes.add(note);
                 }
             }
         } else {
             for (Note note : notes) {
-                if (note.getDescription().equals(findText)) {
-                    System.out.println(note);
+                if (dateFormat(findText).equals(dateFormat(note.getDateOfEditing()))) {
+                    findNotes.add(note);
+                } else {
+                    String[] dateNote = note.getDateOfEditing().split("-");
+                    if (dateFormat(findText).equals(dateFormat(dateNote[0]))) {
+                        findNotes.add(note);
+                    } else if (dateFormat(findText).equals(dateFormat(dateNote[1]))) {
+                        findNotes.add(note);
+                    }
                 }
             }
         }
-
+        for (Note note : findNotes) {
+            System.out.println(note);
+        }
+        return findNotes;
     }
 
+    @Override
     public void printlnNotes() {
         for (Note note : readNotes()) {
             System.out.println(note);
         }
     }
 
+    @Override
     public boolean deleteNotes(int index) {
         List<Note> notes = readNotes();
         boolean deleteNote = false;
@@ -73,11 +83,24 @@ public class NotesFile {
         return deleteNote;
     }
 
+    @Override
     public boolean deleteNotes(String deleteText, int criteriaDelete) {
         List<Note> notes = readNotes();
         boolean deleteNote = false;
         for (int i = 0; i < notes.size(); i++) {
             if (criteriaDelete == 0) {
+                if (deleteText.equals(notes.get(i).getTitle())) {
+                    notes.remove(i);
+                    deleteNote = true;
+                    i--;
+                }
+            } else if (criteriaDelete == 1) {
+                if (deleteText.equals(notes.get(i).getDescription())) {
+                    notes.remove(i);
+                    deleteNote = true;
+                    i--;
+                }
+            } else {
                 if (dateFormat(deleteText).equals(dateFormat(notes.get(i).getDateOfEditing()))) {
                     notes.remove(i);
                     deleteNote = true;
@@ -94,24 +117,19 @@ public class NotesFile {
                         i--;
                     }
                 }
-            } else if (criteriaDelete == 1) {
-                if (deleteText.equals(notes.get(i).getTitle())) {
-                    notes.remove(i);
-                    deleteNote = true;
-                    i--;
-                }
-            } else {
-                if (deleteText.equals(notes.get(i).getDescription())) {
-                    notes.remove(i);
-                    deleteNote = true;
-                    i--;
-                }
             }
         }
         resetFileNotes(notes);
         return deleteNote;
     }
 
+    @Override
+    public void editNotes(int id, int criteriaEdit) {
+        List<Note> notes = readNotes();
+        System.out.println(notes.toString());  // Написал в качестве заглушки!!!! ПЕРЕДЕЛАТЬ!!!!
+    }
+
+    
     private void resetFileNotes(List<Note> notes) {
         try (FileWriter fw = new FileWriter(pathFile, false)) {
             for (Note note : notes) {
@@ -124,7 +142,7 @@ public class NotesFile {
         }
     }
 
-    private List<Note> readNotes() {
+    public List<Note> readNotes() {
         List<Note> notes = new ArrayList<>();
         try (FileReader notesReader = new FileReader(pathFile);) {
             try (BufferedReader reader = new BufferedReader(notesReader)) {

@@ -1,7 +1,7 @@
-// Необходимо написать проект, содержащий функционал работы с заметками. Программа должна уметь создавать заметку, сохранять её, читать список заметок, редактировать заметку, удалять заметку.
+// Необходимо написать проект, содержащий функционал работы с заметками. Программа должна уметь создавать заметку, сохранять её, читать список заметок, __редактировать заметку___, удалять заметку.
 
 // Критерии оценки
-// Приложение должно запускаться без ошибок, должно уметь сохранять данные в файл, уметь читать данные из файла, делать выборку по дате, выводить на экран выбранную запись, выводить на экран весь список записок, добавлять записку, редактировать ее и удалять.
+// Приложение должно запускаться без ошибок, должно уметь сохранять данные в файл, уметь читать данные из файла, делать выборку по дате, выводить на экран выбранную запись, выводить на экран весь список записок, добавлять записку, ____редактировать ее___ и удалять.
 
 // Реализовать консольное приложение заметки, с сохранением, чтением, добавлением, редактированием и удалением заметок.
 
@@ -9,29 +9,17 @@
 
 // Сохранение заметок необходимо сделать в формате json или csv формат (разделение полей рекомендуется делать через точку с запятой). Реализацию пользовательского интерфейса студент может делать как ему удобнее, можно делать как параметры запуска программы (команда, данные), можно делать как запрос команды с консоли и последующим вводом данных, как-то ещё, на усмотрение студента.
 
-import Models.Note;
+import Controllers.Controllers;
+import Controllers.Interfaces.iNotes;
+import Controllers.Interfaces.iView;
 import Models.NotesFile;
+import Views.View;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Note note1 = new Note("Заметка 1", "1 заметка!");
-        Note note2 = new Note("Заметка 2", "2 заметка!");
-        Note note3 = new Note("Заметка 3", "3 заметкаaddaaaaaaaadadajadnajdsflxnadf asaaswa");
-        Note note4 = new Note("Заметка 4", "Заметка 1");
-        Note note5 = new Note("Заметка 5", "5 заметка!");
-        NotesFile notesFile = new NotesFile("Notes.csv");
-        // notesFile.addNote(note1);
-        // notesFile.addNote(note2);
-        // notesFile.addNote(note3);
-        // notesFile.addNote(note4);
-        // notesFile.addNote(note5);
-
-        notesFile.findNote("Заметка 1", 2);
-        System.out.println();
-        notesFile.printlnNotes();
-        // notesFile.deleteNotes("04:05", 0);
-        // System.out.println();
-        // notesFile.printlnNotes();
-        
+        iNotes notesFile = new NotesFile("Notes.csv");
+        iView view = new View();
+        Controllers controllers = new Controllers(notesFile, view);
+        controllers.run();
     }
 }
