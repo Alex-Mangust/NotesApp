@@ -17,9 +17,9 @@ import Views.View;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        iNotes notesFile = new NotesFile("Notes.csv");
-        iView view = new View();
-        Controllers controllers = new Controllers(notesFile, view);
-        controllers.run();
+        iNotes notesFile = new NotesFile("Notes.csv"); // Создаю экземпляр класса Notes для работы с заметками
+        iView view = new View(); // Создаю экземпляр класса View для работы с пользовательским интерфейсом
+        Controllers controllers = new Controllers(notesFile, view); // Создаю экземпляр класса Controllers для работы с моделью и пользовательским интерфейсом, передаю, в качестве аргументов, созданные модель и пользовательский интерфейс
+        controllers.run(); // Вызываю метод для запуска программы
     }
 }
