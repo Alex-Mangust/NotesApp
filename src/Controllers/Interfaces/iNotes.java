@@ -10,6 +10,6 @@ public interface iNotes {
     void printlnNotes();
     boolean deleteNotes(int index);
     boolean deleteNotes(String deleteText, int criteriaDelete);
-    void editNotes(int id, int criteriaEdit);
+    void editNotes(int id, int criteriaEdit, String changes);
     List<Note> readNotes();
 }

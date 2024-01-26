@@ -124,9 +124,13 @@ public class NotesFile implements iNotes {
     }
 
     @Override
-    public void editNotes(int id, int criteriaEdit) {
+    public void editNotes(int id, int criteriaEdit, String changes) {
         List<Note> notes = readNotes();
-        System.out.println(notes.toString());  // Написал в качестве заглушки!!!! ПЕРЕДЕЛАТЬ!!!!
+        if (id > 0 && id <= notes.size()) {
+            if (criteriaEdit == 0) notes.set(id - 1, new Note(changes, notes.get(id-1).getDescription()));
+            else notes.set(id - 1, new Note(notes.get(id-1).getTitle(), changes));
+        }
+        resetFileNotes(notes);
     }
 
     

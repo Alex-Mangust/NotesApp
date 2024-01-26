@@ -1,8 +1,8 @@
 package Controllers;
 
 public enum Command {
-    MENU,
     NONE,
+    MENU,
     CREATE,
     FIND,
     EDIT,

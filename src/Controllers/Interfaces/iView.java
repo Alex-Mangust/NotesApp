@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface iView {
     String prompt(String msg);
+    void listCommand();
     String inputMessage();
     void exit(boolean exit);
     void exitMessage();
@@ -14,14 +15,17 @@ public interface iView {
     String findInput();
     void findResult();
     void nullFindResult();
+    int editIndex();
+    int criteriaEdit();
+    void successfulEdit();
     void printNotesTitle();
     void nullNotes();
     String deleteChoice();
     int deleteIndex();
     void errorIndex();
     String deleteChoiceToDescription();
-    String deleteInput();
-
-
+    String input();
     void successfulDelete();
+    void unsuccessfulDelete();
+    void noCommand();
 }

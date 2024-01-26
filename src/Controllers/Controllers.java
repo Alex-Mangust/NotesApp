@@ -25,6 +25,7 @@ public class Controllers {
     public void run() {
         Command cmd = (Command) Command.NONE;
         boolean nextRun = true;
+        view.listCommand();
         while (nextRun) {
             boolean errorComand = true;
             while (errorComand) {
@@ -32,6 +33,9 @@ public class Controllers {
                 try {
                     cmd = Command.valueOf(comand.toUpperCase());
                     switch (cmd) {
+                        case MENU:
+                            view.listCommand();
+                            break;
                         case EXIT:
                             nextRun = false;
                             view.exit(true);
@@ -58,7 +62,6 @@ public class Controllers {
                                         view.findResult();
                                         if (notes.findNote(yourFind, criteriaFind).size() == 0)
                                             view.nullFindResult();
-                                        // notes.findNote(view.prompt(view.findInput()), criteriaFind);
                                     }
                                 }
                             } else {
@@ -67,7 +70,17 @@ public class Controllers {
                             break;
                         case EDIT:
                             if (testDate()) {
-
+                                int editIndex = view.editIndex();
+                                    if (editIndex <= 0 || editIndex > notes.readNotes().size()) {
+                                        view.errorIndex();
+                                    } else {
+                                        int criteriaEdit = view.criteriaEdit();
+                                        String changes = view.prompt(view.input());
+                                        if (criteriaEdit > 0) {
+                                            notes.editNotes(editIndex, criteriaEdit - 1, changes);
+                                            view.successfulEdit();
+                                        } else view.errorCriteriaFind();
+                                    }
                             } else {
                                 view.nullNotes();
                             }
@@ -84,19 +97,22 @@ public class Controllers {
                             if (testDate()) {
                                 String yourChoiceDelete = view.deleteChoice();
                                 if (yourChoiceDelete.equals("1")) {
-                                    int deleteIndeeex = view.deleteIndex();
-                                    if (deleteIndeeex < 0 || deleteIndeeex > notes.readNotes().size()) {
+                                    int deleteIndex = view.deleteIndex();
+                                    if (deleteIndex < 0 || deleteIndex > notes.readNotes().size()) {
                                         view.errorIndex();
                                     } else {
-                                        notes.deleteNotes(deleteIndeeex);
+                                        notes.deleteNotes(deleteIndex);
                                         view.successfulDelete();
                                     }
                                 } else if (yourChoiceDelete.equals("2")) {
                                     String yourChoiceDeleteDescription = view.deleteChoiceToDescription();
                                     if (convertNumber(yourChoiceDeleteDescription)) {
                                         int criteria = Integer.parseInt(yourChoiceDeleteDescription) - 1;
-                                        notes.deleteNotes(view.prompt(view.deleteInput()), criteria);
-                                        view.successfulDelete();
+                                        if (notes.deleteNotes(view.prompt(view.input()), criteria)) {
+                                            view.successfulDelete();
+                                        } else {
+                                            view.unsuccessfulDelete();
+                                        }
                                     } else view.errorCriteriaFind();
                                 } else view.errorCriteriaFind();
                             } else {
@@ -104,12 +120,13 @@ public class Controllers {
                             }
                             break;
                         default:
+                            view.noCommand();
                             break;
                     }
                     timeSleep(1);
                     errorComand = false;
                 } catch (Exception e) {
-                    System.out.println("Данной команды нет в списке команд!");
+                    view.noCommand();
                 }
             }
         }

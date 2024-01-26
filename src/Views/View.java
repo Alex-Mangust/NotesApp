@@ -19,6 +19,10 @@ public class View implements iView {
         return yourInput;
     }
 
+    public void listCommand() {
+        System.out.println("\nСписок команд\n\nMENU - вызвать список команд\nCREATE - Создать новую заметку\nFIND - Найти заметку\nEDIT - Внести изменения в заметку\nPRINT - Распечатать весь список заметок\nDELETE - Удалить заметку\nEXIT - Завершить работу программы\n");
+    }
+
     @Override
     public String inputMessage() {
         return "Введите команду: ";
@@ -83,6 +87,37 @@ public class View implements iView {
     public void nullNotes() {
         System.out.println("У вас нет ни одной заметки!");
     }
+
+    @Override
+    public int editIndex() {
+        String index = prompt("Введите индекс заметки, в которую хотите ввести изменения: ");
+        try {
+            return Integer.parseInt(index);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    @Override
+    public int criteriaEdit() {
+        String criteria = prompt("Что бы вы хотели изменить?\n1 - Заголовок заметки; 2 - Описание заметки\n");
+        try {
+            return Integer.parseInt(criteria);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    @Override
+    public String input() {
+        return "Введите ваш запрос: ";
+    }  
+
+    @Override
+    public void successfulEdit() {
+        System.out.println("Изменения сохранены!");
+    }
+
     @Override
     public void printNotesTitle() {
         System.out.println("Список всех ваших заметок:");
@@ -123,11 +158,13 @@ public class View implements iView {
     }
 
     @Override
-    public String deleteInput() {
-        return "Введите ваш запрос: ";
+    public void unsuccessfulDelete() {
+        System.out.println("Ошибка! Не удалось удалить заметку по вашему запросу!");
     }
 
-    
-    
+    @Override
+    public void noCommand() {
+        System.out.println("Данной команды нет в списке команд!\nВведите \"menu\", чтобы посмотреть список команд для работы с программой!");
+    }  
 
 }
